@@ -86,11 +86,12 @@ const warriorsGames = [
 ];
 
 const ulParent = document.createElement('ul');
-checkWinner = (homePoints, awayPoints) => {
+const checkWinner = (homePoints, awayPoints) => {
   return awayPoints > homePoints
     ? `<b>${awayPoints}</b>-${homePoints}`
     : `${awayPoints}-<b>${homePoints}</b>`;
 };
+const isWinner = (isWinner) => (isWinner ? 'win' : 'loss');
 
 for (let game of warriorsGames) {
   const { homeTeam, awayTeam } = game;
@@ -99,9 +100,11 @@ for (let game of warriorsGames) {
 
   const gameLi = document.createElement('li');
   const teamNames = `${aTeam} @ ${hTeam}`;
-  let scoreLine = checkWinner(hPoints, aPoints);
+  const scoreLine = checkWinner(hPoints, aPoints);
 
   gameLi.innerHTML = `${teamNames} ${scoreLine}`;
+  const warriors = hTeam === 'Golden State' ? homeTeam : awayTeam;
+  gameLi.classList.add(isWinner(warriors.isWinner));
   ulParent.append(gameLi);
 }
 
