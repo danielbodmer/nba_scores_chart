@@ -85,27 +85,35 @@ const warriorsGames = [
   },
 ];
 
-const ulParent = document.createElement('ul');
+const makeChart = (games, targetTeam) => {
+  const ulParent = document.createElement('ul');
+
+  for (let game of games) {
+    const gameLi = document.createElement('li');
+    gameLi.innerHTML = getScoreLine(game);
+    gameLi.classList.add(isWinner(game, targetTeam) ? 'win' : 'loss');
+    ulParent.append(gameLi);
+  }
+
+  return ulParent;
+};
+
 const checkWinner = (homePoints, awayPoints) => {
   return awayPoints > homePoints
     ? `<b>${awayPoints}</b>-${homePoints}`
     : `${awayPoints}-<b>${homePoints}</b>`;
 };
-const isWinner = (isWinner) => (isWinner ? 'win' : 'loss');
+const isWinner = ({ homeTeam, awayTeam }, targetTeam) => {
+  const target = homeTeam.team === targetTeam ? homeTeam : awayTeam;
+  return target.isWinner;
+};
 
-for (let game of warriorsGames) {
-  const { homeTeam, awayTeam } = game;
+const getScoreLine = ({ homeTeam, awayTeam }) => {
   const { team: hTeam, points: hPoints } = homeTeam;
   const { team: aTeam, points: aPoints } = awayTeam;
-
-  const gameLi = document.createElement('li');
-  const teamNames = `${aTeam} @ ${hTeam}`;
   const scoreLine = checkWinner(hPoints, aPoints);
+  return `${aTeam} @ ${hTeam} ${scoreLine}`;
+};
 
-  gameLi.innerHTML = `${teamNames} ${scoreLine}`;
-  const warriors = hTeam === 'Golden State' ? homeTeam : awayTeam;
-  gameLi.classList.add(isWinner(warriors.isWinner));
-  ulParent.append(gameLi);
-}
-
-document.body.prepend(ulParent);
+const chart1 = makeChart(warriorsGames, 'Golden State');
+document.body.prepend(chart1);
